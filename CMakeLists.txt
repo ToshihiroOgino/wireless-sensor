@@ -19,7 +19,7 @@ set(sdkVersion 2.2.0)
 set(toolchainVersion 14_2_Rel1)
 set(picotoolVersion 2.2.0-a4)
 set(picoVscode ${USERHOME}/.pico-sdk/cmake/pico-vscode.cmake)
-if (EXISTS ${picoVscode})
+if(EXISTS ${picoVscode})
     include(${picoVscode})
 endif()
 # ====================================================================================
@@ -28,38 +28,28 @@ set(PICO_BOARD pico_w CACHE STRING "Board type")
 # Pull in Raspberry Pi Pico SDK (must be before project)
 include(pico_sdk_import.cmake)
 
-project(wireless-sensor C CXX ASM)
+set(PROJECT_NAME wireless-sensor)
 
-# Initialise the Raspberry Pi Pico SDK
+project(${PROJECT_NAME} C CXX ASM)
+
 pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(wireless-sensor wireless-sensor.cpp )
+add_executable(${PROJECT_NAME} ${PROJECT_NAME}.cpp)
 
-pico_set_program_name(wireless-sensor "wireless-sensor")
-pico_set_program_version(wireless-sensor "0.1")
+pico_set_program_name(${PROJECT_NAME} "${PROJECT_NAME}")
+pico_set_program_version(${PROJECT_NAME} "0.1")
 
-# no_flash means the target is to run from RAM
-pico_set_binary_type(wireless-sensor no_flash)
+pico_set_binary_type(${PROJECT_NAME} default)
 
 # Modify the below lines to enable/disable output over UART/USB
-pico_enable_stdio_uart(wireless-sensor 1)
-pico_enable_stdio_usb(wireless-sensor 0)
+pico_enable_stdio_uart(${PROJECT_NAME} 1)
+pico_enable_stdio_usb(${PROJECT_NAME} 1)
 
-# Add the standard library to the build
-target_link_libraries(wireless-sensor
-        pico_stdlib)
+target_link_libraries(${PROJECT_NAME} pico_stdlib)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_LIST_DIR})
 
-# Add the standard include files to the build
-target_include_directories(wireless-sensor PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}
-)
+target_link_libraries(${PROJECT_NAME} pico_cyw43_arch_none)
 
-# Add any user requested libraries
-target_link_libraries(wireless-sensor 
-        pico_cyw43_arch_none
-        )
-
-pico_add_extra_outputs(wireless-sensor)
-
+pico_add_extra_outputs(${PROJECT_NAME})
