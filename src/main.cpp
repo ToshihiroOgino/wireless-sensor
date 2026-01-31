@@ -1,13 +1,19 @@
+#include "AHT21B.hpp"
+#include "hardware/watchdog.h"
 #include "pico/cyw43_arch.h"
 #include "pico/stdlib.h"
 #include <stdio.h>
 
-// GPIO 16
 #define BTN_PIN 4
 
 void btn_pressed_callback(uint gpio, uint32_t events) {
 	if (gpio == BTN_PIN && (events & GPIO_IRQ_EDGE_FALL)) {
-		printf("Button Pressed!\n");
+		printf("Rebooting...\n\n\n");
+		cyw43_arch_deinit();
+		watchdog_enable(1, 1);
+		while (true) {
+			// wait for watchdog reset
+		}
 	}
 }
 
@@ -28,13 +34,18 @@ int main() {
 	gpio_set_irq_enabled_with_callback(BTN_PIN, GPIO_IRQ_EDGE_FALL, true,
 	                                   &btn_pressed_callback);
 
-	bool led_state = false;
+	AHT21B sensor(i2c0);
+	if (sensor.begin()) {
+		printf("AHT21B Initialized.\n");
+	}
 
 	while (true) {
-		cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, led_state);
-		led_state = !led_state;
-		printf("Hello, world!\n");
-		sleep_ms(1000);
+		float h, t;
+		if (sensor.read_data(h, t)) {
+			printf("Humidity: %.2f %%RH, Temperature: %.2f degC\n", h, t);
+		} else {
+			printf("Sensor read failed\n");
+		}
+		sleep_ms(10 * 1000);
 	}
-	return 0;
 }
