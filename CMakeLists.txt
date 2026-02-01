@@ -50,8 +50,8 @@ target_link_libraries(
     ${PROJECT_NAME}
     pico_stdlib
     hardware_i2c
-    pico_cyw43_arch_none
     hardware_watchdog
+    pico_cyw43_arch_none
 )
 
 target_include_directories(
