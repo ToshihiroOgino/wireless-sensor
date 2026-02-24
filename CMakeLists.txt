@@ -19,7 +19,7 @@ set(sdkVersion 2.2.0)
 set(toolchainVersion 14_2_Rel1)
 set(picotoolVersion 2.2.0-a4)
 set(picoVscode ${USERHOME}/.pico-sdk/cmake/pico-vscode.cmake)
-if(EXISTS ${picoVscode})
+if (EXISTS ${picoVscode})
     include(${picoVscode})
 endif()
 # ====================================================================================
@@ -51,7 +51,9 @@ target_link_libraries(
     pico_stdlib
     hardware_i2c
     hardware_watchdog
-    pico_cyw43_arch_none
+    # pico_cyw43_arch_none
+    pico_cyw43_arch_lwip_threadsafe_background
+    pico_lwip_mdns
 )
 
 target_include_directories(
