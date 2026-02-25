@@ -29,7 +29,6 @@ set(makefsdataTool ${USERHOME}/.pico-sdk/sdk/${sdkVersion}/src/rp2_common/pico_l
 set(PICO_MAKEFSDATA_TOOL ${makefsdataTool} CACHE FILEPATH "Path to makefsdata.py")
 set(FSDATA_OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/fsdata.c)
 
-
 file(GLOB_RECURSE SRC_FILES "${CMAKE_CURRENT_LIST_DIR}/src/*.cpp")
 file(GLOB_RECURSE HTTP_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/html/*")
 
@@ -42,6 +41,7 @@ project(${PROJECT_NAME} C CXX ASM)
 
 pico_sdk_init()
 
+pico_add_library(pico_httpd_content NOFLAG)
 
 add_executable(${PROJECT_NAME}
     ${SRC_FILES}
@@ -73,16 +73,15 @@ target_link_libraries(
     pico_stdlib
     hardware_i2c
     hardware_watchdog
-    # pico_cyw43_arch_none
     pico_cyw43_arch_lwip_threadsafe_background
     pico_lwip_http
+    pico_httpd_content
     pico_lwip_mdns
 )
 
 target_include_directories(
     ${PROJECT_NAME}
     PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}
     ${CMAKE_CURRENT_LIST_DIR}/src
     ${CMAKE_CURRENT_BINARY_DIR}
 )
