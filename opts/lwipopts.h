@@ -6,7 +6,7 @@
 #define LWIP_IGMP 1
 #define LWIP_NUM_NETIF_CLIENT_DATA 1
 #define MDNS_RESP_USENETIF_EXTCALLBACK 1
-#define MEMP_NUM_SYS_TIMEOUT (LWIP_NUM_SYS_TIMEOUT_INTERNAL + 3)
+// #define MEMP_NUM_SYS_TIMEOUT (LWIP_NUM_SYS_TIMEOUT_INTERNAL + 3)
 #define MEMP_NUM_TCP_PCB 12
 
 // Common settings used in most of the pico_w examples
@@ -100,5 +100,8 @@
 #define HTTPD_USE_CUSTOM_FSDATA 1
 
 #define HTTPD_FSDATA_FILE "pico_fsdata.inc"
+
+#define SNTP_SERVER_DNS 1
+#define MEMP_NUM_SYS_TIMEOUT 12
 
 #endif /* __LWIPOPTS_H__ */

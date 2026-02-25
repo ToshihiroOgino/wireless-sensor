@@ -63,11 +63,13 @@ target_link_libraries(
     pico_lwip_mdns
     pico_lwip_http
     pico_httpd_content
+    pico_lwip_sntp
 )
 
 target_include_directories(
     ${PROJECT_NAME}
     PRIVATE
+    ${CMAKE_CURRENT_LIST_DIR}/opts
     ${CMAKE_CURRENT_LIST_DIR}/src
     ${CMAKE_CURRENT_BINARY_DIR}
 )
