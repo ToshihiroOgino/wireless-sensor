@@ -47,8 +47,8 @@
 
       <hr />
 
-      <a href="/led.cgi?status=on" class="btn on">LED点灯</a>
-      <a href="/led.cgi?status=off" class="btn off">LED消灯</a>
+      <a href="/led?status=on" class="btn on">LED点灯</a>
+      <a href="/led?status=off" class="btn off">LED消灯</a>
     </div>
   </body>
 </html>

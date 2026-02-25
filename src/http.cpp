@@ -26,7 +26,7 @@ const char *cgi_handler_led(int iIndex, int iNumParams, char *pcParam[],
 
 // 2. ハンドラ構造体の配列（URIと関数の紐付け）
 static const tCGI cgi_handlers[] = {
-    {"/led.cgi", cgi_handler_led},
+    // {"/led.cgi", cgi_handler_led},
     {"/led", cgi_handler_led},
 };
 
