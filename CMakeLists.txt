@@ -25,6 +25,14 @@ endif()
 # ====================================================================================
 set(PICO_BOARD pico_w CACHE STRING "Board type")
 
+set(makefsdataTool ${USERHOME}/.pico-sdk/sdk/${sdkVersion}/src/rp2_common/pico_lwip/tools/makefsdata.py)
+set(PICO_MAKEFSDATA_TOOL ${makefsdataTool} CACHE FILEPATH "Path to makefsdata.py")
+set(FSDATA_OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/fsdata.c)
+
+
+file(GLOB_RECURSE SRC_FILES "${CMAKE_CURRENT_LIST_DIR}/src/*.cpp")
+file(GLOB_RECURSE HTTP_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/html/*")
+
 # Pull in Raspberry Pi Pico SDK (must be before project)
 include(pico_sdk_import.cmake)
 
@@ -34,13 +42,27 @@ project(${PROJECT_NAME} C CXX ASM)
 
 pico_sdk_init()
 
-file(GLOB_RECURSE SRC_FILES "src/*.cpp")
-add_executable(${PROJECT_NAME} ${SRC_FILES})
+
+add_executable(${PROJECT_NAME}
+    ${SRC_FILES}
+)
+add_dependencies(${PROJECT_NAME} generate_fsdata)
 
 pico_set_program_name(${PROJECT_NAME} "${PROJECT_NAME}")
 pico_set_program_version(${PROJECT_NAME} "0.1")
 
 pico_set_binary_type(${PROJECT_NAME} default)
+
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+
+
+add_custom_target(generate_fsdata ALL
+    COMMAND ${Python3_EXECUTABLE} ${PICO_MAKEFSDATA_TOOL} -i ${HTTP_FILES} -o ${FSDATA_OUTPUT}
+    DEPENDS ${HTTP_FILES} ${PICO_MAKEFSDATA_TOOL}
+    BYPRODUCTS ${FSDATA_OUTPUT}
+    COMMENT "Generating fsdata.c with makefsdata.py"
+    VERBATIM
+)
 
 # Modify the below lines to enable/disable output over UART/USB
 pico_enable_stdio_uart(${PROJECT_NAME} 1)
@@ -53,12 +75,16 @@ target_link_libraries(
     hardware_watchdog
     # pico_cyw43_arch_none
     pico_cyw43_arch_lwip_threadsafe_background
+    pico_lwip_http
     pico_lwip_mdns
 )
 
 target_include_directories(
     ${PROJECT_NAME}
-    PRIVATE ${CMAKE_CURRENT_LIST_DIR} ${CMAKE_CURRENT_LIST_DIR}/src
+    PRIVATE
+    ${CMAKE_CURRENT_LIST_DIR}
+    ${CMAKE_CURRENT_LIST_DIR}/src
+    ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 pico_add_extra_outputs(${PROJECT_NAME})

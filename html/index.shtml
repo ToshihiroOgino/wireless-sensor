@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sensor Node Control</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        text-align: center;
+        background: #f4f4f4;
+      }
+      .card {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        display: inline-block;
+        margin-top: 50px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      .status {
+        font-weight: bold;
+        color: #007bff;
+      }
+      .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 10px;
+        text-decoration: none;
+        color: white;
+        border-radius: 5px;
+      }
+      .on {
+        background: #28a745;
+      }
+      .off {
+        background: #dc3545;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>Sensor Node (LwIP)</h1>
+
+      <p>現在のLED状態: <span class="status"></span></p>
+      <p>温度センサー: <span class="status">℃</span></p>
+
+      <hr />
+
+      <a href="/led.cgi?status=on" class="btn on">LED点灯</a>
+      <a href="/led.cgi?status=off" class="btn off">LED消灯</a>
+    </div>
+  </body>
+</html>
