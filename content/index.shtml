@@ -42,8 +42,9 @@
     <div class="card">
       <h1>Sensor Node (LwIP)</h1>
 
-      <p>現在のLED状態: <span class="status"></span></p>
-      <p>温度センサー: <span class="status">℃</span></p>
+      <p>現在のLED状態: <span class="status"><!--#state--></span></p>
+      <p>温度: <span class="status"><!--#temp--> ℃</span></p>
+      <p>湿度: <span class="status"><!--#humidity--> %</span></p>
 
       <hr />
 

@@ -97,7 +97,12 @@
 #define DHCP_DEBUG LWIP_DBG_OFF
 
 #define LWIP_HTTPD_CGI 1
+#define LWIP_HTTPD_SSI 1
 #define HTTPD_USE_CUSTOM_FSDATA 1
+
+#define HTTPD_USE_MEM_POOL                  1
+#define MEMP_NUM_PARALLEL_HTTPD_CONNS       16
+#define MEMP_NUM_PARALLEL_HTTPD_SSI_CONNS   16
 
 #define HTTPD_FSDATA_FILE "pico_fsdata.inc"
 

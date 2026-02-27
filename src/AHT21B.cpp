@@ -3,7 +3,7 @@
 
 bool write(i2c_inst_t *i2c, uint8_t addr, const uint8_t *src, size_t len,
            bool nostop) {
-	int ret = i2c_write_blocking(i2c, addr, src, len, nostop);
+	const int ret = i2c_write_blocking(i2c, addr, src, len, nostop);
 	if (ret < PICO_OK) {
 		printf("I2C write error: %d\n", ret);
 		return false;
@@ -13,7 +13,7 @@ bool write(i2c_inst_t *i2c, uint8_t addr, const uint8_t *src, size_t len,
 
 bool read(i2c_inst_t *i2c, uint8_t addr, uint8_t *dst, size_t len,
           bool nostop) {
-	int ret = i2c_read_blocking(i2c, addr, dst, len, nostop);
+	const int ret = i2c_read_blocking(i2c, addr, dst, len, nostop);
 	if (ret < PICO_OK) {
 		printf("I2C read error: %d\n", ret);
 		return false;
@@ -23,7 +23,7 @@ bool read(i2c_inst_t *i2c, uint8_t addr, uint8_t *dst, size_t len,
 
 AHT21B::AHT21B(i2c_inst_t *i2c_inst) : i2c(i2c_inst) {}
 
-bool AHT21B::begin(uint sda_pin, uint scl_pin) {
+void AHT21B::begin(uint sda_pin, uint scl_pin) {
 	i2c_init(i2c, 100 * 1000); // 100kHz Standard Mode
 	gpio_set_function(sda_pin, GPIO_FUNC_I2C);
 	gpio_set_function(scl_pin, GPIO_FUNC_I2C);
@@ -37,12 +37,12 @@ bool AHT21B::begin(uint sda_pin, uint scl_pin) {
 		reset_registers();
 		sleep_ms(10);
 	}
-	return true;
+	return;
 }
 
 uint8_t AHT21B::read_status() {
-	uint8_t reg = 0x71;
-	uint8_t status;
+	constexpr uint8_t reg = 0x71;
+	uint8_t status = 0xFF;
 	if (!write(i2c, ADDR, &reg, 1, true)) {
 		printf("Failed to write get status command\n");
 		return 0xFF;
@@ -56,9 +56,9 @@ uint8_t AHT21B::read_status() {
 
 void AHT21B::reset_registers() {
 	// 0x1B, 0x1C, 0x1E の初期化
-	uint8_t regs[] = {0x1B, 0x1C, 0x1E};
+	constexpr uint8_t regs[] = {0x1B, 0x1C, 0x1E};
 	for (uint8_t r : regs) {
-		uint8_t cmd[] = {r, 0x00, 0x00};
+		const uint8_t cmd[] = {r, 0x00, 0x00};
 		if (!write(i2c, ADDR, cmd, 3, false)) {
 			printf("Failed to reset register %02X\n", r);
 			return;
@@ -67,12 +67,15 @@ void AHT21B::reset_registers() {
 	}
 }
 
-bool AHT21B::read_data(float &humidity, float &temperature) {
-	// 測定トリガー
-	uint8_t trigger[] = {0xAC, 0x33, 0x00};
+int AHT21B::read_data(AHT21B_result_t *result) {
+	if (result == nullptr) {
+		return -1;
+	}
+
+	constexpr uint8_t trigger[] = {0xAC, 0x33, 0x00};
 	if (!write(i2c, ADDR, trigger, 3, false)) {
 		printf("Failed to trigger measurement\n");
-		return false;
+		return -1;
 	}
 
 	sleep_ms(80); // 測定待ち
@@ -85,17 +88,16 @@ bool AHT21B::read_data(float &humidity, float &temperature) {
 	uint8_t data[7]; // status + 5 bytes data + CRC
 	if (!read(i2c, ADDR, data, 7, false)) {
 		printf("Failed to read measurement data\n");
-		return false;
+		return -1;
 	}
 
-	// データ変換
-	uint32_t raw_humidity =
+	const uint32_t raw_humidity =
 	    ((uint32_t)data[1] << 12) | ((uint32_t)data[2] << 4) | (data[3] >> 4);
-	uint32_t raw_temperature =
+	const uint32_t raw_temperature =
 	    ((uint32_t)(data[3] & 0x0F) << 16) | ((uint32_t)data[4] << 8) | data[5];
 
-	humidity = (float)raw_humidity / 1048576.0f * 100.0f;
-	temperature = (float)raw_temperature / 1048576.0f * 200.0f - 50.0f;
+	result->humidity = (float)raw_humidity / 1048576.0f * 100.0f;
+	result->temperature = (float)raw_temperature / 1048576.0f * 200.0f - 50.0f;
 
-	return true;
+	return 0;
 }
