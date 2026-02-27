@@ -60,6 +60,7 @@ int main() {
 	start_http_server(80);
 
 	while (true) {
-		sleep_ms(10 * 1000);
+		sensor.read_sensor_data();
+		sleep_ms(5 * 1000);
 	}
 }

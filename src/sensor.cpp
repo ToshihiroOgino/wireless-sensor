@@ -1,7 +1,5 @@
 #include "sensor.hpp"
 
-#include "hardware/timer.h"
-#include "pico/stdlib.h"
 #include <stdio.h>
 
 Sensor *singleton_sensor = nullptr;
@@ -21,22 +19,9 @@ void Sensor::read_sensor_data() {
 	}
 }
 
-bool repeating_timer_callback(struct repeating_timer *t) {
-	if (t == nullptr || t->user_data == nullptr) {
-		printf("Invalid timer callback data(t=%p, user_data=%p)\n", t,
-		       t ? t->user_data : nullptr);
-		return false;
-	}
-	Sensor *sensor = (Sensor *)t->user_data;
-	sensor->read_sensor_data();
-	return true;
-}
-
 Sensor::Sensor() : aht21B(i2c0) {
 	aht21B.begin();
 	mutex_init(&data_mutex);
-
-	add_repeating_timer_ms(5000, repeating_timer_callback, this, &timer);
 }
 
 data_t Sensor::get_recent_data() {
