@@ -49,7 +49,7 @@ int main() {
 		return -1;
 	}
 
-	if (init_mdns("sensor") != 0) {
+	if (init_mdns("pico") != 0) {
 		printf("Failed to initialize mDNS\n");
 		return -1;
 	}
