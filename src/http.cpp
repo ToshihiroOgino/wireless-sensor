@@ -4,7 +4,7 @@
 #include "lwip/apps/httpd.h"
 #include "pico/cyw43_arch.h"
 #include <stdio.h>
-#include <string.h>
+#include <cstring>
 
 #include "sensor.hpp"
 
@@ -35,6 +35,16 @@ static const tCGI cgi_handlers[] = {
 static const char *ssi_tags[] = {"state"};
 
 static constexpr size_t HTTP_HISTORY_RESPONSE_POINTS = 300;
+// Buffer size for the HTTP history JSON response.
+// Rough sizing:
+//   - HTTP headers + JSON wrapper (status line, headers, '{"points":[', ']}'):
+//       ≈ 512 bytes worst case
+//   - Per-point JSON payload '[timestamp,temperature,humidity]' including
+//       comma/spacing overhead: ≈ 32–40 bytes
+//   - Max points: HTTP_HISTORY_RESPONSE_POINTS (300)
+//   => 300 * 40 bytes + 512 bytes ≈ 12,512 bytes
+// We round to a convenient power-of-two multiple: 12 KiB (12 * 1024 = 12288),
+// which is sufficient for the current format while keeping memory usage modest.
 static constexpr size_t HTTP_HISTORY_JSON_BUFFER_SIZE = 12288;
 static char history_json[HTTP_HISTORY_JSON_BUFFER_SIZE];
 

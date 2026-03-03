@@ -51,6 +51,9 @@ size_t Sensor::get_history(data_t *buffer, size_t max_count) {
 
 	mutex_enter_blocking(&data_mutex);
 	const size_t count = std::min(max_count, history_count);
+	// history_head always points to the next write position (one past the newest entry).
+	// To retrieve the most recent 'count' items, we move 'count' steps back from history_head,
+	// adding HISTORY_CAPACITY before subtracting to avoid underflow, then wrap with modulo.
 	const size_t start = (history_head + HISTORY_CAPACITY - count) % HISTORY_CAPACITY;
 	for (size_t i = 0; i < count; ++i) {
 		buffer[i] = history[(start + i) % HISTORY_CAPACITY];

@@ -3,7 +3,7 @@ const REFRESH_INTERVAL_MS = 5000;
 
 let chart;
 
-function formatElapsed(ms) {
+function formatElapsedTime(ms) {
   const totalSeconds = Math.floor(ms / 1000);
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
@@ -76,7 +76,7 @@ function ensureChart() {
 
 function applyHistory(payload) {
   const points = Array.isArray(payload?.points) ? payload.points : [];
-  const labels = points.map((point) => formatElapsed(point[0]));
+  const labels = points.map((point) => formatElapsedTime(point[0]));
   const temperatures = points.map((point) => point[1]);
   const humidities = points.map((point) => point[2]);
 
