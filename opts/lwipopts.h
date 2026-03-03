@@ -98,6 +98,8 @@
 
 #define LWIP_HTTPD_CGI 1
 #define LWIP_HTTPD_SSI 1
+#define LWIP_HTTPD_CUSTOM_FILES 1
+#define LWIP_HTTPD_DYNAMIC_HEADERS 1
 #define HTTPD_USE_CUSTOM_FSDATA 1
 
 #define HTTPD_USE_MEM_POOL                  1

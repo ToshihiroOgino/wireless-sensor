@@ -3,53 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sensor Node Control</title>
-    <style>
-      body {
-        font-family: sans-serif;
-        text-align: center;
-        background: #f4f4f4;
-      }
-      .card {
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-        display: inline-block;
-        margin-top: 50px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      }
-      .status {
-        font-weight: bold;
-        color: #007bff;
-      }
-      .btn {
-        display: inline-block;
-        padding: 10px 20px;
-        margin: 10px;
-        text-decoration: none;
-        color: white;
-        border-radius: 5px;
-      }
-      .on {
-        background: #28a745;
-      }
-      .off {
-        background: #dc3545;
-      }
-    </style>
+    <title>Sensor Node Graph</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
     <div class="card">
-      <h1>Sensor Node</h1>
+      <h1>Sensor Node Graph</h1>
 
-      <p>現在のLED状態: <span class="status"><!--#state--></span></p>
-      <p>温度: <span class="status"><!--#temp--> ℃</span></p>
-      <p>湿度: <span class="status"><!--#humidity--> %</span></p>
+      <p>
+        現在のLED状態: <span class="status"><!--#state--></span>
+      </p>
+
+      <div class="chart-wrap">
+        <canvas id="sensorChart"></canvas>
+      </div>
 
       <hr />
 
       <a href="/led?status=on" class="btn on">LED点灯</a>
       <a href="/led?status=off" class="btn off">LED消灯</a>
     </div>
+    <script src="/app.js"></script>
   </body>
 </html>

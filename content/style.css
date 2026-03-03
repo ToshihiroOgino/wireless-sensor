@@ -1,0 +1,43 @@
+body {
+  font-family: sans-serif;
+  text-align: center;
+  background: #f4f4f4;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  display: inline-block;
+  margin-top: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: min(920px, 96vw);
+}
+
+.status {
+  font-weight: bold;
+  color: #007bff;
+}
+
+.chart-wrap {
+  width: 100%;
+  min-height: 320px;
+  margin-top: 16px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 10px;
+  text-decoration: none;
+  color: white;
+  border-radius: 5px;
+}
+
+.on {
+  background: #28a745;
+}
+
+.off {
+  background: #dc3545;
+}
