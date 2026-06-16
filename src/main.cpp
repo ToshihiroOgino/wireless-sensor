@@ -12,10 +12,8 @@
 
 #define BTN_PIN 4
 
-// #define SSID "TTHocLieuT2"
-// #define PASSWORD "hoclieut2"
-#define SSID "Pixel_6686"
-#define PASSWORD "4ebc7jt4"
+#define SSID "hoge"
+#define PASSWORD "hoge"
 
 void btn_pressed_callback(uint gpio, uint32_t events) {
 	if (gpio == BTN_PIN && (events & GPIO_IRQ_EDGE_FALL)) {
