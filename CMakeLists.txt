@@ -23,7 +23,7 @@ if (EXISTS ${picoVscode})
     include(${picoVscode})
 endif()
 # ====================================================================================
-set(PICO_BOARD pico_w CACHE STRING "Board type")
+set(PICO_BOARD pico2_w CACHE STRING "Board type")
 
 file(GLOB_RECURSE SRC_FILES "${CMAKE_CURRENT_LIST_DIR}/src/*.cpp")
 file(GLOB_RECURSE HTTP_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/content/*")
@@ -33,7 +33,7 @@ include(pico_sdk_import.cmake)
 
 set(PROJECT_NAME "wireless-sensor")
 
-project(${PROJECT_NAME} C CXX ASM)
+project(wireless-sensor C CXX ASM)
 
 pico_sdk_init()
 
@@ -59,7 +59,6 @@ target_link_libraries(
     pico_stdlib
     hardware_i2c
     hardware_watchdog
-    hardware_rtc
     pico_cyw43_arch_lwip_threadsafe_background
     pico_lwip_mdns
     pico_lwip_http
